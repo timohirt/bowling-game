@@ -10,13 +10,11 @@ public class Game {
 
     private Frame currentFrame;
     private List<Frame> allFrames;
-    private LastFrame lastFrame;
 
     public Game() {
         currentFrame = new Frame();
         allFrames = new ArrayList<>();
         allFrames.add(currentFrame);
-        lastFrame = new LastFrame();
     }
 
     public void addRoll(int pinsHit) {
@@ -31,14 +29,15 @@ public class Game {
     }
 
     private Frame nextFrame() {
+        Frame nextFrame;
         if (isNextFrameLast()) {
-            allFrames.add(lastFrame);
-            return lastFrame;
+            nextFrame = new LastFrame();
         } else {
-            var newFrame = new Frame();
-            allFrames.add(newFrame);
-            return newFrame;
+            nextFrame = new Frame();
         }
+        
+        allFrames.add(nextFrame);
+        return nextFrame;
     }
 
     private boolean isNextFrameLast() {
