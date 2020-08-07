@@ -10,11 +10,13 @@ public class Game {
 
     private Frame currentFrame;
     private List<Frame> allFrames;
+    private LastFrame lastFrame;
 
     public Game() {
         currentFrame = new Frame();
         allFrames = new ArrayList<>();
         allFrames.add(currentFrame);
+        lastFrame = new LastFrame();
     }
 
     public void addRoll(int pinsHit) {
@@ -22,16 +24,25 @@ public class Game {
             if (isLastFrame()) {
                 throw new IllegalStateException("A game only allows ten frames.");  
             }
-            currentFrame = addNewFrame();
+            currentFrame = nextFrame();
         }
 
         currentFrame.addRoll(pinsHit);
     }
 
-    private Frame addNewFrame() {
-        var newFrame = new Frame();
-        allFrames.add(newFrame);
-        return newFrame;
+    private Frame nextFrame() {
+        if (isNextFrameLast()) {
+            allFrames.add(lastFrame);
+            return lastFrame;
+        } else {
+            var newFrame = new Frame();
+            allFrames.add(newFrame);
+            return newFrame;
+        }
+    }
+
+    private boolean isNextFrameLast() {
+        return allFrames.size() == MAX_FRAMES - 1;
     }
 
     private boolean isLastFrame() {
@@ -41,7 +52,21 @@ public class Game {
     public Score currentScore() {
         return allFrames
             .stream()
-            .map(frame -> frame.calculateScore(Optional.empty()))
+            .map(frame -> {
+                var maybeNextFrame = findNextFrame(frame);
+                return frame.calculateScore(maybeNextFrame);
+            })
             .reduce(Score.zero(), (subtotal, current) -> Score.of(subtotal.getValue() + current.getValue()));
+    }
+
+    private Optional<Frame> findNextFrame(Frame frame) {
+        var it = allFrames.iterator();
+        while (it.hasNext()) {
+            var current = it.next();
+            if (current == frame && it.hasNext()) {
+                return Optional.of(it.next());
+            }
+        }
+        return Optional.empty();
     }
 }

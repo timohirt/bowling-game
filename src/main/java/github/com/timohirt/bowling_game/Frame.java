@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public class Frame {
 
-    private static final int MAX_PINS = 10; 
+    protected static final int MAX_PINS = 10; 
 
     private Optional<Integer> maybePinsHitFirstRoll = Optional.empty();
     private Optional<Integer> maybePinsHitSecondRoll = Optional.empty();
@@ -24,12 +24,16 @@ public class Frame {
     }
 
 
-    private int pinsHitTotal() {
+    protected int pinsHitTotal() {
         return maybePinsHitFirstRoll.orElse(0) + maybePinsHitSecondRoll.orElse(0);
     }
 
-    private boolean isStrike() {
+    public boolean isStrike() {
         return allPinsHit() && maybePinsHitSecondRoll.isEmpty();
+    }
+
+    public boolean isSpare() {
+        return allPinsHit() && maybePinsHitSecondRoll.isPresent();
     }
 
     private boolean allPinsHit() {
@@ -37,7 +41,7 @@ public class Frame {
     }
 
     private boolean addBonusToScore() {
-        return allPinsHit();
+        return isSpare() || isStrike();
     }
 
     private int pinsOfRoll(Optional<Integer> maybePinsHit) {

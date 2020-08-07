@@ -6,7 +6,6 @@ import static org.junit.Assert.assertThrows;
 import java.util.stream.IntStream;
 
 import org.junit.Test;
-import org.junit.Assert.*;
 
 public class GameTest {
     
@@ -46,5 +45,31 @@ public class GameTest {
         IntStream
             .range(0, numberOfRolls)
             .forEach(irrelevant -> game.addRoll(pinsHit));
+    }
+
+    @Test
+    public void testCalculateScoreOfGameOnTaskSheet() {
+        var game = new Game();
+        game.addRoll(1);
+        game.addRoll(4);
+        game.addRoll(4);
+        game.addRoll(5);
+        game.addRoll(6);
+        game.addRoll(4);
+        game.addRoll(5);
+        game.addRoll(5);
+        game.addRoll(10);
+        game.addRoll(0);
+        game.addRoll(1);
+        game.addRoll(7);
+        game.addRoll(3);
+        game.addRoll(6);
+        game.addRoll(4);
+        game.addRoll(10);
+        game.addRoll(2);
+        game.addRoll(8);
+        game.addRoll(6);
+
+        assertEquals(Score.of(133), game.currentScore());
     }
 }
