@@ -17,20 +17,19 @@ public class Game {
     }
 
     public void addRoll(int pinsHit) {
-        if (currentFrame.canTakeAnotherRoll()) {
-            currentFrame.addRoll(pinsHit);
-        } else if (isLastFrame()) {
-            throw new IllegalStateException("A game only allows ten frames.");  
-        } else {
-            var newFrame = addNewFrame();
-            newFrame.addRoll(pinsHit);
+        if (!currentFrame.canTakeAnotherRoll()) {
+            if (isLastFrame()) {
+                throw new IllegalStateException("A game only allows ten frames.");  
+            }
+            currentFrame = addNewFrame();
         }
+
+        currentFrame.addRoll(pinsHit);
     }
 
     private Frame addNewFrame() {
         var newFrame = new Frame();
         allFrames.add(newFrame);
-        currentFrame = newFrame;
         return newFrame;
     }
 
