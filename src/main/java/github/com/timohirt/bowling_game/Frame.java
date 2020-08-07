@@ -10,8 +10,10 @@ public class Frame {
     public void addRoll(int pinsHit) {
         if (maybePinsHitFirstRoll.isEmpty()) {
             maybePinsHitFirstRoll = Optional.of(pinsHit);
-        } else {
+        } else if (maybePinsHitSecondRoll.isEmpty()) {
             maybePinsHitSecondRoll = Optional.of(pinsHit);
+        } else {
+            throw new IllegalStateException("Only two rolls allowed.");
         }
     }
 

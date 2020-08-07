@@ -26,4 +26,12 @@ public class FrameTest {
         frame.addRoll(1);
         assertEquals(Score.of(2), frame.calculateScore());
     }
+
+    @Test
+    public void testWhenThreeRollsAddedMustThrowAnException() {
+        var frame = new Frame();
+        frame.addRoll(1);
+        frame.addRoll(1);
+        assertThrows(IllegalStateException.class, () -> frame.addRoll(1));
+    }
 }
