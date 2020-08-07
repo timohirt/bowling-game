@@ -3,12 +3,20 @@
  */
 package github.com.timohirt.bowling_game;
 
+import java.util.Arrays;
+
 public class App {
     public String getGreeting() {
         return "Hello world.";
     }
 
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        var game = new Game();
+
+        Arrays.asList(args).forEach(pinsHitString -> {
+            var pinsHit = Integer.parseInt(pinsHitString);
+            game.addRoll(pinsHit);
+        });
+        System.out.printf("Total score is: %d", game.currentScore().getValue());
     }
 }
