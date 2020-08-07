@@ -18,4 +18,12 @@ public class FrameTest {
         frame.addRoll(1);
         assertEquals(Score.of(1), frame.calculateScore());
     }
+
+    @Test
+    public void testWhenTwoPinsHitInTwoRollsScoreMustBeTwo() {
+        var frame = new Frame();
+        frame.addRoll(1);
+        frame.addRoll(1);
+        assertEquals(Score.of(2), frame.calculateScore());
+    }
 }
