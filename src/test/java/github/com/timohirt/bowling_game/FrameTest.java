@@ -1,5 +1,6 @@
 package github.com.timohirt.bowling_game;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -78,6 +79,34 @@ public class FrameTest {
 
         assertEquals(Score.of(15), splitFrame.calculateScore(Optional.of(nextFrame)));
     }
+
+    @Test
+    public void testAddPinsOfNextTwoRollsBonusToScoreIfCurrentFrameIsAStrike() {
+        var splitFrame = new Frame();
+        splitFrame.addRoll(10);
+
+        var nextFrame = new Frame();
+        nextFrame.addRoll(5);
+        nextFrame.addRoll(5);
+
+        assertEquals(Score.of(20), splitFrame.calculateScore(Optional.of(nextFrame)));
+    }
+
+    @Test
+    @Ignore("Two Strikes in a row not supported yet.")
+    public void testAddPinsOfNextTwoRollsBonusToScoreIfCurrentFrameIsAStrikeAndTheNextFrameIsAStrikeAsWell() {
+        var splitFrame = new Frame();
+        splitFrame.addRoll(10);
+
+        var nextFrame = new Frame();
+        nextFrame.addRoll(10);
+        
+        var frameAfterNext = new Frame();
+        frameAfterNext.addRoll(5);
+
+        assertEquals(Score.of(25), splitFrame.calculateScore(Optional.of(nextFrame)));
+    }
+
 
     @Test
     public void testIfFrameIsASplitThrowAnExceptionWhenNoRollsAddedToNextFrame() {

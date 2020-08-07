@@ -28,12 +28,38 @@ public class Frame {
         return maybePinsHitFirstRoll.orElse(0) + maybePinsHitSecondRoll.orElse(0);
     }
 
+    private boolean isStrike() {
+        return allPinsHit() && maybePinsHitSecondRoll.isEmpty();
+    }
+
+    private boolean allPinsHit() {
+        return pinsHitTotal() == MAX_PINS;
+    }
+
+    private boolean addBonusToScore() {
+        return allPinsHit();
+    }
+
+    private int pinsOfRoll(Optional<Integer> maybePinsHit) {
+        return maybePinsHit
+            .orElseThrow(() -> new IllegalArgumentException("No pins hit with this roll."));
+    }
+
+    private int calculateBonus(Frame nextFrame) {
+        int bonus = pinsOfRoll(nextFrame.maybePinsHitFirstRoll);
+        if (isStrike()) {
+            bonus = bonus + pinsOfRoll(nextFrame.maybePinsHitSecondRoll);
+        } 
+        return bonus;
+    }
+
     public Score calculateScore(Optional<Frame> maybeNextFrame) {
         var pinsHitTotal = pinsHitTotal();
-        if (pinsHitTotal == MAX_PINS && maybePinsHitSecondRoll.isPresent()) {
+        if (addBonusToScore()) {
             int bonus = maybeNextFrame
-                .flatMap(f -> f.maybePinsHitFirstRoll)
-                .orElseThrow(() -> new IllegalArgumentException("Next frame without first roll added not allowed."));
+                .map(nextFrame -> calculateBonus(nextFrame))
+                .orElseThrow(() -> new IllegalArgumentException("Next frame required to calculate score, but not provided."));
+            
             return Score.of(pinsHitTotal + bonus);
         }        
         return Score.of(pinsHitTotal);
