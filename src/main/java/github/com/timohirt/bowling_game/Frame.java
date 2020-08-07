@@ -18,12 +18,15 @@ public class Frame {
     }
 
     public boolean canTakeAnotherRoll() {
-        return maybePinsHitSecondRoll.isEmpty() && maybePinsHitFirstRoll.orElse(0) + maybePinsHitSecondRoll.orElse(0) < 10;
+        return maybePinsHitSecondRoll.isEmpty() && pinsHitTotal() < 10;
+    }
+
+
+    private int pinsHitTotal() {
+        return maybePinsHitFirstRoll.orElse(0) + maybePinsHitSecondRoll.orElse(0);
     }
 
     public Score calculateScore() {
-        var pinsHitTotal = maybePinsHitFirstRoll.orElse(0) + maybePinsHitSecondRoll.orElse(0);
-
-        return Score.of(pinsHitTotal);
+        return Score.of(pinsHitTotal());
     }
 }
