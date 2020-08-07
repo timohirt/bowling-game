@@ -2,6 +2,7 @@ package github.com.timohirt.bowling_game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Game {
     
@@ -40,7 +41,7 @@ public class Game {
     public Score currentScore() {
         return allFrames
             .stream()
-            .map(frame -> frame.calculateScore())
+            .map(frame -> frame.calculateScore(Optional.empty()))
             .reduce(Score.zero(), (subtotal, current) -> Score.of(subtotal.getValue() + current.getValue()));
     }
 }

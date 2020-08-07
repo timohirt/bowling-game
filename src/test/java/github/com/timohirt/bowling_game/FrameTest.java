@@ -3,20 +3,22 @@ package github.com.timohirt.bowling_game;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import java.util.Optional;
+
 public class FrameTest {
 
 
     @Test
     public void testWhenNoRollsScoreMustBeZero() {
         var frame = new Frame();
-        assertEquals(Score.zero(), frame.calculateScore());
+        assertEquals(Score.zero(), frame.calculateScore(Optional.empty()));
     }
 
     @Test
     public void testWhenOnePinHitWithTheFirstRollScoreMustBeOne() {
         var frame = new Frame();
         frame.addRoll(1);
-        assertEquals(Score.of(1), frame.calculateScore());
+        assertEquals(Score.of(1), frame.calculateScore(Optional.empty()));
     }
 
     @Test
@@ -24,7 +26,7 @@ public class FrameTest {
         var frame = new Frame();
         frame.addRoll(1);
         frame.addRoll(1);
-        assertEquals(Score.of(2), frame.calculateScore());
+        assertEquals(Score.of(2), frame.calculateScore(Optional.empty()));
     }
 
     @Test
@@ -63,5 +65,28 @@ public class FrameTest {
         frame.addRoll(10);
 
         assertFalse(frame.canTakeAnotherRoll());
+    }
+
+    @Test
+    public void testAddPinsOfFirstRollBonusToScoreIfCurrentFrameIsASplit() {
+        var splitFrame = new Frame();
+        splitFrame.addRoll(2);
+        splitFrame.addRoll(8);
+
+        var nextFrame = new Frame();
+        nextFrame.addRoll(5);
+
+        assertEquals(Score.of(15), splitFrame.calculateScore(Optional.of(nextFrame)));
+    }
+
+    @Test
+    public void testIfFrameIsASplitThrowAnExceptionWhenNoRollsAddedToNextFrame() {
+        var splitFrame = new Frame();
+        splitFrame.addRoll(2);
+        splitFrame.addRoll(8);
+
+        var nextFrame = new Frame();
+
+        assertThrows(IllegalArgumentException.class, () -> splitFrame.calculateScore(Optional.of(nextFrame)));
     }
 }
