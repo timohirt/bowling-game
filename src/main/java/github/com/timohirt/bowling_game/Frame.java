@@ -17,6 +17,10 @@ public class Frame {
         }
     }
 
+    public boolean canTakeAnotherRoll() {
+        return maybePinsHitSecondRoll.isEmpty() && maybePinsHitFirstRoll.orElse(0) + maybePinsHitSecondRoll.orElse(0) < 10;
+    }
+
     public Score calculateScore() {
         var pinsHitTotal = maybePinsHitFirstRoll.orElse(0) + maybePinsHitSecondRoll.orElse(0);
 

@@ -34,4 +34,34 @@ public class FrameTest {
         frame.addRoll(1);
         assertThrows(IllegalStateException.class, () -> frame.addRoll(1));
     }
+
+    @Test
+    public void testCanTakeAnotherRollIfNoRollsAddedYet() {
+        assertTrue(new Frame().canTakeAnotherRoll());
+    }
+
+    @Test
+    public void testCanTakeAnotherRollIfLessThanTenPinsWereHitWithOneRoll() {
+        var frame = new Frame();
+        frame.addRoll(9);
+
+        assertTrue(frame.canTakeAnotherRoll());
+    }
+
+    @Test
+    public void testCannotTakeAnotherRollIfLessThanTenPinsWereHitWithTwoRolls() {
+        var frame = new Frame();
+        frame.addRoll(1);
+        frame.addRoll(8);
+
+        assertFalse(frame.canTakeAnotherRoll());
+    }
+
+    @Test
+    public void testCannotTakeAnotherRollIfTenPinsWereHitWithTheFirstRoll() {
+        var frame = new Frame();
+        frame.addRoll(10);
+
+        assertFalse(frame.canTakeAnotherRoll());
+    }
 }
